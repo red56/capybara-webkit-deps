@@ -19,5 +19,11 @@ RUN apt-get install --assume-yes \
     gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x \
     yarn
 
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub |  apt-key add - &&\
+     sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' &&\
+     apt-get update &&\
+     apt-get install -y google-chrome-unstable
+
+
 # for phantom js (for jasmine tests for example)  == depends on nodejs
 RUN npm install -g phantomjs-prebuilt

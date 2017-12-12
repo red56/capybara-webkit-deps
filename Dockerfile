@@ -22,6 +22,8 @@ RUN apt-get install --assume-yes \
     yarn \
     unzip
 
+# NB: even though we're installing chromedriver here, it's possible you might be overriding it by bundling chromedriver-helper...
+
 # https://github.com/RobCherry/docker-chromedriver/blob/master/Dockerfile
 RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
     mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \

@@ -1,4 +1,4 @@
-FROM ruby:2.3.5
+FROM ruby:2.4.3
 
 # Rebuild 20171212 083000
 

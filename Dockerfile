@@ -19,6 +19,7 @@ RUN apt-get install --assume-yes \
     qt5-default libqt5webkit5-dev \
     xvfb \
     gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x \
+    libfontconfig \
     yarn \
     unzip
 
@@ -39,4 +40,4 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub |  apt-ke
 
 
 # for phantom js (for jasmine tests for example)  == depends on nodejs
-RUN npm install -g phantomjs-prebuilt
+RUN yarn global add phantomjs-prebuilt

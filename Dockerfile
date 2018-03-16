@@ -12,7 +12,7 @@ RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list
 RUN apt-get update --assume-yes
 
 # to get latest npm for phantomjs
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
 RUN apt-get install --assume-yes \
     build-essential nodejs \

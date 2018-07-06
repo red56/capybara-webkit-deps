@@ -1,6 +1,6 @@
-FROM ruby:2.5.0
+FROM ruby:2.5.1
 
-# Rebuild 20171212 083000
+# Rebuild
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true

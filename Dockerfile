@@ -1,4 +1,4 @@
-FROM ruby:2.5.3
+FROM ruby:2.5.5
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true

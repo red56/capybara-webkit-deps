@@ -8,6 +8,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update --assume-yes
+RUN apt-get install --assume-yes libsodium-dev
 
 # to get latest npm for phantomjs
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
@@ -21,20 +22,12 @@ RUN apt-get install --assume-yes \
     yarn \
     unzip
 
-# https://github.com/RobCherry/docker-chromedriver/blob/master/Dockerfile
-RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
-    mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    rm /tmp/chromedriver_linux64.zip && \
-    chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
-    ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
-
 # https://github.com/ebidel/lighthouse-ci/blob/master/builder/Dockerfile
+# https://qr.ae/TWhRta
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub |  apt-key add - &&\
      sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' &&\
      apt-get update &&\
-     apt-get install -y google-chrome-unstable
+     apt-get install -y google-chrome-stable
 
 
 # for phantom js (for jasmine tests for example)  == depends on nodejs

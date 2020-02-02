@@ -1,4 +1,6 @@
-FROM ruby:2.4.6
+FROM ruby:2.4.9-stretch
+# charlock_holmes does not yet support buster apparently https://github.com/brianmario/charlock_holmes/issues/154
+# also heroku is on 18.04 which is based on stretch
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true

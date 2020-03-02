@@ -1,4 +1,5 @@
-FROM ruby:2.5.5
+FROM ruby:2.5.7-stretch
+# heroku is on 18.04 which is based on stretch
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true

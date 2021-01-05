@@ -1,4 +1,4 @@
-FROM ruby:2.4.9-stretch
+FROM ruby:2.5.8-stretch
 # charlock_holmes does not yet support buster apparently https://github.com/brianmario/charlock_holmes/issues/154
 # also heroku is on 18.04 which is based on stretch
 
@@ -56,8 +56,6 @@ RUN yarn -v
 
 # for phantom js (for jasmine tests for example) -- TODO: drop phantomjs... migrate from jasmine-rails, or fix jasmine-rails?
 RUN yarn global add phantomjs-prebuilt
-
-RUN echo "upgrading chrome"
 
 # https://github.com/ebidel/lighthouse-ci/blob/master/builder/Dockerfile
 # https://qr.ae/TWhRta

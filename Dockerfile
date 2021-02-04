@@ -1,23 +1,22 @@
-FROM ruby:2.5.8-stretch
-# charlock_holmes does not yet support buster apparently https://github.com/brianmario/charlock_holmes/issues/154
-# also heroku is on 18.04 which is based on stretch
+FROM cimg/ruby:2.5.8-browsers
+# https://circleci.com/developer/images/image/cimg/ruby
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-RUN apt-get update --assume-yes
+RUN sudo apt-get update --assume-yes
 # need https transport because of dpkg I think
-RUN apt-get install apt-transport-https
+RUN sudo apt-get install --assume-yes apt-transport-https
 
-RUN apt-get install --assume-yes libsodium-dev
+RUN sudo apt-get install --assume-yes libsodium-dev
 
-RUN apt-get install --assume-yes \
-    build-essential \
-    qt5-default libqt5webkit5-dev \
-    xvfb \
-    gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x \
-    libfontconfig \
-    unzip
+# install needed for nodejs
+RUN sudo apt-get install --assume-yes python-minimal
+# install needed for xvfb-run (for chrome)
+RUN sudo apt-get install --assume-yes xvfb
+
+# maybe ?
+RUN sudo apt-get install --assume-yes xvfb build-essential unzip
 
 # NODE Option 1
 # Add for nodejs (from https://github.com/nodesource/distributions#manual-installation)
@@ -40,12 +39,12 @@ RUN apt-get install --assume-yes \
 # NODE Option 3 use .deb from https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/
 ENV VERSION=10.15.3
 RUN curl -O https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/nodejs_${VERSION}-1nodesource1_amd64.deb
-RUN dpkg -i nodejs_${VERSION}-1nodesource1_amd64.deb
-RUN apt-get install -f
+RUN sudo dpkg -i nodejs_${VERSION}-1nodesource1_amd64.deb
+RUN sudo apt-get install -f
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install  --assume-yes --no-install-recommends yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt-get update && sudo apt-get install  --assume-yes --no-install-recommends yarn
 # FYI
 RUN which nodejs
 RUN nodejs -v
@@ -54,23 +53,20 @@ RUN node -v
 RUN which yarn
 RUN yarn -v
 
-# for phantom js (for jasmine tests for example) -- TODO: drop phantomjs... migrate from jasmine-rails, or fix jasmine-rails?
-RUN yarn global add phantomjs-prebuilt
-
 # https://github.com/ebidel/lighthouse-ci/blob/master/builder/Dockerfile
 # https://qr.ae/TWhRta
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub |  apt-key add - &&\
-     sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' &&\
-     apt-get update &&\
-     apt-get install -y google-chrome-stable
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub |  sudo apt-key add - &&\
+     sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' &&\
+     sudo apt-get update &&\
+     sudo apt-get install -y google-chrome-stable
 
 RUN google-chrome --version || echo "could not find out chrome version"
 
 # Install ChromeDriver.
 RUN CHROME_DRIVER_VERSION=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE` &&\
-    wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/ &&\
-    unzip ~/chromedriver_linux64.zip -d ~/ &&\
-    rm ~/chromedriver_linux64.zip &&\
-    mv -f ~/chromedriver /usr/local/bin/chromedriver &&\
-    chown root:root /usr/local/bin/chromedriver &&\
-    chmod 0755 /usr/local/bin/chromedriver
+    sudo wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/ &&\
+    sudo unzip ~/chromedriver_linux64.zip -d ~/ &&\
+    sudo rm ~/chromedriver_linux64.zip &&\
+    sudo mv -f ~/chromedriver /usr/local/bin/chromedriver &&\
+    sudo chown root:root /usr/local/bin/chromedriver &&\
+    sudo chmod 0755 /usr/local/bin/chromedriver
